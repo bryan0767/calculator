@@ -1,0 +1,75 @@
+body {
+  background-color:hsl(210,16%,70%);
+}
+
+.Calculator {
+  display:flex;
+  border:none;
+  margin:auto;
+  margin-top: 40px;
+  height:300px;
+  width:200px;
+  overflow: hidden;
+}
+
+.Buttons {
+  display:flex;
+  flex-flow:wrap column;
+  height:225px;
+  width:200px;
+  margin-top:73px;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  position: fixed;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.Button:hover {
+  background-color: hsl(150, 0%, 89%);
+}
+
+.Button[size="2"]:hover {
+  background-color: hsl(150, 0%, 89%);
+}
+
+.Button {
+ display:flex;
+ flex-basis: 20%;
+ justify-content: center;
+ outline:1px black;
+ overflow: hidden;
+ font-size:15px;
+ width:50px;
+ background-color: hsl(200, 25%, 93%);
+ border:none;
+ color: hsl(150,23%,40%);
+ font-family: 'Montserrat', sans-serif;
+}
+
+.Button[size="2"] {
+  display:flex;
+   flex-basis: 40%;
+  justify-content: center;
+  outline:1px black;
+  overflow: hidden;
+  font-size:16px;
+  background-color: hsl(200, 25%, 93%);
+  font-family: 'Montserrat', sans-serif;
+  color: hsl(150,23%,40%);
+}
+
+.Display {
+  display:inline-block;
+  display:flex;
+  height: 70px;
+  width:200px;
+  justify-content:flex-end;
+  padding:7%;
+  color: hsl(150,23%,28%);
+  font-size:25px;
+  align-items: center;
+  overflow: hidden;
+  background-color: hsl(150, 50%, 80%);
+  font-family: 'Montserrat', sans-serif;
+}
