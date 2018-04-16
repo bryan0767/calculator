@@ -1,28 +1,50 @@
 body {
+  display: flex;
+  justify-content: center;
   background-color:hsl(210,16%,70%);
+  align-items: center;
+  height:100vh;
 }
 
 .Calculator {
   display:flex;
-  border:none;
-  margin:auto;
-  margin-top: 40px;
+  /* margin:auto; */
   height:300px;
   width:200px;
   overflow: hidden;
+  flex-flow: column wrap;
+  /* border: 2px solid black; */
 }
 
-.Buttons {
+.Display {
   display:flex;
-  flex-flow:wrap column;
-  height:225px;
-  width:200px;
-  margin-top:73px;
-  justify-content: center;
-  text-align: center;
-  overflow: hidden;
-  position: fixed;
+  flex:1;
+  color: hsl(150,23%,28%);
+  font-size:22px;
+  overflow: none;
+  background-color: hsl(150, 50%, 80%);
   font-family: 'Montserrat', sans-serif;
+  justify-content: flex-end;
+}
+
+#text {
+display: flex;
+height:30%;
+align-self: flex-end;
+margin:5%;
+/* max-width: 90%; */
+/* border:2px solid black; */
+overflow: hidden;
+text-align: center;
+}
+
+.contain {
+  display:flex;
+  flex:2.5;
+  flex-flow:column wrap;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+
 }
 
 .Button:hover {
@@ -33,43 +55,30 @@ body {
   background-color: hsl(150, 0%, 89%);
 }
 
-.Button {
- display:flex;
- flex-basis: 20%;
- justify-content: center;
+ .Button {
+ /* display:flex; */
+ /* flex-basis: 20%; */
+ /* justify-content: center; */
  outline:1px black;
+ flex:1 20%;
  overflow: hidden;
  font-size:15px;
- width:50px;
  background-color: hsl(200, 25%, 93%);
  border:none;
  color: hsl(150,23%,40%);
  font-family: 'Montserrat', sans-serif;
+ /* border:2px solid black; */
 }
 
 .Button[size="2"] {
-  display:flex;
+  /* display:flex; */
    flex-basis: 40%;
   justify-content: center;
   outline:1px black;
   overflow: hidden;
+  /* outline:none; */
   font-size:16px;
   background-color: hsl(200, 25%, 93%);
   font-family: 'Montserrat', sans-serif;
   color: hsl(150,23%,40%);
-}
-
-.Display {
-  display:inline-block;
-  display:flex;
-  height: 70px;
-  width:200px;
-  justify-content:flex-end;
-  padding:7%;
-  color: hsl(150,23%,28%);
-  font-size:25px;
-  align-items: center;
-  overflow: hidden;
-  background-color: hsl(150, 50%, 80%);
-  font-family: 'Montserrat', sans-serif;
 }
