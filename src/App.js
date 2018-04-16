@@ -12,8 +12,16 @@ class App extends React.Component {
       decimal: false,
       newOp: false,
       paren: false,
-      count: 1
     }
+  }
+
+  componentDidMount() {
+    const butt = document.querySelectorAll('button')
+    butt.forEach(x => {
+      x.addEventListener('click', this.handleClick)
+    })
+    const del = document.getElementById('del')
+    del.innerHTML = '<'
   }
 
 handleClick = (e) => {
@@ -23,6 +31,8 @@ handleClick = (e) => {
   let decimal = this.state.decimal
   let newOp = this.state.newOp
   let count = this.state.count
+  const disElement = document.getElementById('text')
+
 
     switch (value) {
       case 'clear':
@@ -62,12 +72,16 @@ handleClick = (e) => {
         if (typeof display === 'string') {
           return;
         } else if (display.length > 0
-            && multiple===false ) {
+            && multiple===false && disElement.offsetWidth < 174
+          ) {
               this.flip()
             } else {return;}
       break;
       case 'delete':
         if (typeof display === 'string') {
+          this.setState({
+            display: []
+          })
           return;
         } else if (display.length === 1) {
             this.delete();
@@ -86,7 +100,8 @@ handleClick = (e) => {
         if(typeof display === 'string') {
           return;
           } else if (multiple === false
-              && display.length > 0  && count <= 12) {
+              && display.length > 0 && disElement.offsetWidth < 174
+            ) {
                  let a = display.join("")
                  let b = Array.of(a)
                  display.length = 0
@@ -105,7 +120,8 @@ handleClick = (e) => {
         if (typeof display === 'string') {
             return;
             } else if (multiple === false
-                && display.length > 0  && count <= 12 ) {
+                && display.length > 0 && disElement.offsetWidth < 174
+              ) {
                   let a = display.join("")
                   let b = Array.of(a)
                   display.length = 0
@@ -124,7 +140,8 @@ handleClick = (e) => {
         if(typeof display === 'string') {
            return;
            } else if (multiple === false
-                && display.length > 0 && count <= 12) {
+                && display.length > 0 && disElement.offsetWidth < 174
+              ) {
                   let a = display.join("")
                   let b = Array.of(a)
                   display.length = 0
@@ -143,15 +160,16 @@ handleClick = (e) => {
         if(typeof display === 'string') {
            return;
            } else if (multiple === false
-                && display.length > 0 && count <= 12 ) {
+                && display.length > 0 && disElement.offsetWidth < 174
+              ) {
                 let a = display.join("")
                 let b = Array.of(a)
                 display.length = 0
                 let c = display.push(b)
-                let d = display.push(value)
+                // let d = display.push(value)
                   this.setState({
                     multiple: true,
-                    display:display,
+                    display:update(display, {$push: [value]}),
                     decimal: false,
                     newOp:true
                   })
@@ -161,7 +179,10 @@ handleClick = (e) => {
         if(typeof display === 'string') {
            return;
          } else if(display.length > 0
-                && decimal === false  && count <= 12 ) {
+                && decimal === false
+                && disElement.offsetWidth < 174
+              )
+                {
                   this.setState({
                     decimal:true,
                     display: update(display, {$push: [value]}),
@@ -173,24 +194,30 @@ handleClick = (e) => {
                 }
       break;
       default:
-        if (newOp === false) {
+      if(disElement.offsetWidth >= 174) {
+        this.setState({
+          display: 'Chill Bro'
+        })
+      }
+      else if (newOp === false) {
             this.setState({
               display: [value],
               newOp: true,
-              count: 2
+              // count: 2
               })
             }
           else if (typeof display === 'string') {return;}
           else if (display.includes("0") &&
             display.length < 2 && value === '0' ) {return;}
-            else if ( count <= 12 && value && display.length <= 12) {
-                let a = display.push(value)
+            else if (
+              // count <= 12 &&
+              value && disElement.offsetWidth < 174) {
                   this.setState({
-                      display:display,
+                      display: update(display, {$push: [value]}),
                       multiple:false,
-                      count: count + 1
+                      // count: count + 1
                     })
-                  } else if (display.length >= 12) {
+                  } else if (disElement.offsetWidth >= 174) {
                       this.setState({
                           multiple:true,
                           decimal: true
@@ -198,6 +225,7 @@ handleClick = (e) => {
                   }  else {return;}
                     break;
                     }
+                    // console.log(this.state.display);
                   }
 
 calculate = () => {
@@ -279,9 +307,6 @@ flip = () => {
     let c = b *= -1
     let d = Array.of(c)
 
-
-
-
     if(value.includes('(') || value.includes(')')) {
         let a = takeoff(value)
         let f = a *= -1
@@ -309,7 +334,7 @@ flip = () => {
 
   function paran(array,value) {
 
-    if( value == -0 || isNaN(value) === true || value == 0 ) {
+    if( value === -0 || isNaN(value) === true || value === 0 ) {
       let e = array.push('(')
        let f = array.push('-')
 
@@ -446,63 +471,38 @@ render() {
       return (
 
         <div className='Calculator'>
-        <Display data={this.state.display}/>
-        <Buttons>
+        <div className = 'Display'>
+        <div id= 'text'>{this.state.display}</div>
+        </div>
+        <div className = 'contain'>
 
-        <Button value='clear' label='C' onClick={this.handleClick}/>
-        <Button value='7' label='7' onClick={this.handleClick}/>
-        <Button value='4' label='4' onClick={this.handleClick}/>
-        <Button value='1' label='1' onClick={this.handleClick}/>
-        <Button value='0' label='0' onClick={this.handleClick}/>
-        <Button value='/' label='/' onClick={this.handleClick}/>
-        <Button value='8' label='8' onClick={this.handleClick}/>
-        <Button value='5' label='5' onClick={this.handleClick}/>
-        <Button value='2' label='2' onClick={this.handleClick}/>
-        <Button value='.' label='.' onClick={this.handleClick}/>
-        <Button value='*' label='*' onClick={this.handleClick}/>
-        <Button value='9' label='9' onClick={this.handleClick}/>
-        <Button value='6' label='6' onClick={this.handleClick}/>
-        <Button value='3' label='3' onClick={this.handleClick}/>
+        <button className = 'Button' value='clear'>C</button>
+        <button className = 'Button' value='7'>7</button>
+        <button className = 'Button' value='4'>4</button>
+        <button className = 'Button' value='1'>1</button>
+        <button className = 'Button' value='0'>0</button>
+        <button className = 'Button' value='/'> / </button>
+        <button className = 'Button' value='8'>8</button>
+        <button className = 'Button' value='5'>5</button>
+        <button className = 'Button' value='2'>2</button>
+        <button className = 'Button' value='.'>.</button>
+        <button className = 'Button' value='*'>*</button>
+        <button className = 'Button' value='9'>9</button>
+        <button className = 'Button' value='6'>6</button>
+        <button className = 'Button' value='3'>3</button>
 
-        <Button value='∆' label='+/-' onClick={this.handleClick}/>
+        <button className = 'Button' value='∆'>+/-</button>
 
-        <Button value='delete' label='<' onClick={this.handleClick}/>
-        <Button value='-' label='-' onClick={this.handleClick}/>
-        <Button value='+' label='+' onClick={this.handleClick}/>
-        <Button value='=' label='='  size = "2" onClick={this.handleClick}/>
+        <button className = 'Button' value='delete' id = 'del'>  </button>
+        <button className = 'Button' value='-'>-</button>
+        <button className = 'Button' value='+'>+</button>
+        <button className = 'Button' value='=' size = "2" >=</button>
 
-        </Buttons>
+        </div>
         </div>
 
       )
     }
   }
-
-class Display extends React.Component {
-   render() {
-     return(
-       <div className="Display">{this.props.data}</div>
-     )
-    }
-  }
-
-class Buttons extends React.Component {
-   render() {
-     return (
-       <div className="Buttons">{this.props.children}</div>
-     )
-   }
- }
-
-class Button extends React.Component {
-   render() {
-     return (
-       <button className="Button" value={this.props.value}
-       onClick={this.props.onClick} size={this.props.size}>
-       {this.props.label}
-       </button>
-     )
-   }
- }
 
 export default App;
