@@ -1,9 +1,8 @@
 import React from 'react'
 import './App.css';
-import update from 'react-addons-update'
 import math from 'mathjs'
 
-class App extends React.Component {
+class Calc extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,7 +14,7 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
+componentDidMount() {
     const butt = document.querySelectorAll('button')
     butt.forEach(x => {
       x.addEventListener('click', this.handleClick)
@@ -30,9 +29,7 @@ handleClick = (e) => {
   let multiple = this.state.multiple
   let decimal = this.state.decimal
   let newOp = this.state.newOp
-  let count = this.state.count
   const disElement = document.getElementById('text')
-
 
     switch (value) {
       case 'clear':
@@ -40,7 +37,6 @@ handleClick = (e) => {
             display:[],
             multiple: false,
             decimal:false,
-            count: 1
           });
       break;
       case '=':
@@ -50,13 +46,11 @@ handleClick = (e) => {
              this.setState({
                 decimal:false,
                 newOp: false,
-                count: count
               })
             } else if (typeof display === 'string' ||
               isNaN(display.slice(-1)) === true) {
                 this.setState({
                   display: [],
-                  count:1
                 })
            return;
            } else {
@@ -64,7 +58,6 @@ handleClick = (e) => {
               this.setState({
                   decimal:false,
                   newOp: false,
-                  count:count
                })
              }
       break;
@@ -84,15 +77,11 @@ handleClick = (e) => {
           })
           return;
         } else if (display.length === 1) {
-            this.delete();
-            this.setState({
-              count:1
-            })
+            this.delete()
         } else {
             this.delete();
             this.setState({
-              decimal:false,
-              count: count - 1
+              decimal:false
             })
           }
       break;
@@ -100,8 +89,7 @@ handleClick = (e) => {
         if(typeof display === 'string') {
           return;
           } else if (multiple === false
-              && display.length > 0 && disElement.offsetWidth < 174
-            ) {
+              && display.length > 0 && disElement.offsetWidth < 174) {
                  let a = display.join("")
                  let b = Array.of(a)
                  display.length = 0
@@ -112,7 +100,6 @@ handleClick = (e) => {
                     display: display,
                     decimal: false,
                     newOp: true,
-                    count: count + 1
                   })
                 }
       break;
@@ -131,8 +118,7 @@ handleClick = (e) => {
                         multiple:true,
                         display: display,
                         decimal: false,
-                        newOp: true,
-                        count: count + 1
+                        newOp: true
                       })
                     }
       break;
@@ -151,8 +137,7 @@ handleClick = (e) => {
                       multiple: true,
                       display: display,
                       decimal: false,
-                      newOp:true,
-                      count: count + 1
+                      newOp:true
                     })
                   }
       break;
@@ -166,10 +151,10 @@ handleClick = (e) => {
                 let b = Array.of(a)
                 display.length = 0
                 let c = display.push(b)
-                // let d = display.push(value)
+                let d = display.push(value)
                   this.setState({
                     multiple: true,
-                    display:update(display, {$push: [value]}),
+                    display: display,
                     decimal: false,
                     newOp:true
                   })
@@ -180,18 +165,15 @@ handleClick = (e) => {
            return;
          } else if(display.length > 0
                 && decimal === false
-                && disElement.offsetWidth < 174
-              )
-                {
+                && disElement.offsetWidth < 174) {
+                  let d = display.push(value)
                   this.setState({
                     decimal:true,
-                    display: update(display, {$push: [value]}),
+                    display:display,
                     multiple:true,
                     newOp:true
                   })
-                } else {
-                  return;
-                }
+                } else {return;}
       break;
       default:
       if(disElement.offsetWidth >= 174) {
@@ -203,19 +185,16 @@ handleClick = (e) => {
             this.setState({
               display: [value],
               newOp: true,
-              // count: 2
               })
             }
           else if (typeof display === 'string') {return;}
           else if (display.includes("0") &&
             display.length < 2 && value === '0' ) {return;}
-            else if (
-              // count <= 12 &&
-              value && disElement.offsetWidth < 174) {
+            else if (value && disElement.offsetWidth < 174) {
+              let d  = display.push(value)
                   this.setState({
-                      display: update(display, {$push: [value]}),
+                      display:display,
                       multiple:false,
-                      // count: count + 1
                     })
                   } else if (disElement.offsetWidth >= 174) {
                       this.setState({
@@ -225,7 +204,6 @@ handleClick = (e) => {
                   }  else {return;}
                     break;
                     }
-                    // console.log(this.state.display);
                   }
 
 calculate = () => {
@@ -285,7 +263,19 @@ calculate = () => {
 delete = () => {
   let value = this.state.display
 
-  if(value) {
+  if(value.length === 0) return;
+    else if(typeof value[0] === "string") {
+        value.splice(-1,1);
+        this.setState({
+          display: value
+            })
+  } else if(value.length === 2) {
+            let a = value[0].join('').split('')
+            this.setState({
+              display:a
+            })
+          }
+  else if(value) {
       value.splice(-1,1);
       this.setState({
         display: value
@@ -296,11 +286,20 @@ delete = () => {
       this.setState({
         multiple: false
         })
+        console.log(value)
       }
 
 flip = () => {
 
   let display = this.state.display
+  let reg = /\W/
+  let specials = []
+  let specs = display.filter(x => {
+    if(reg.test(x) && typeof x === 'string') {
+      specials.push(x)
+      }
+    })
+  let disElement = document.getElementById('text')
 
   function combine(value) {
     let b = value.join("")
@@ -317,60 +316,43 @@ flip = () => {
         }
       }
 
-  function nope(value) {
-        return value !== '(' && value !== ')'
-    }
-
   function takeoff(value) {
-    let a = value.filter(function(value) {
-      return nope(value)
-    })
-    let b = a.join("")
-    let c = b *= -1
-    let d = Array.of(b)
+    let a = value.filter(x => {
+      return x !== '(' && x !== ')'
+    }).join("")
+    let b = a *= -1
+    let d = Array.of(a)
 
-    return d
-  }
+      return d
+    }
 
   function paran(array,value) {
 
     if( value === -0 || isNaN(value) === true || value === 0 ) {
-      let e = array.push('(')
-       let f = array.push('-')
-
+      let e = array.push('(', '-')
           return array;
         } else {
-          let e = array.push('(')
-          let d = array.push(value)
-          let f = array.push(')')
+          let e = array.push('(', value, ')')
 
-        return array
-   }
-  }
+          return array
+        }
+      }
 
   function none(array,value) {
-      let a = array.push(value)
+      array.push(value)
 
       return array
     }
 
-  function signs(value) {
-      return value !== "*" && value !== "-"
-      && value !== "+" && value !== "/"
-    }
-
   function add(value) {
-    let a = value.filter(function(value) {
-      if(display.indexOf(value) > display.indexOf('+')) {
-        return signs(value)
-      }
-    })
 
-    let b = value.filter(function(value) {
-    if(display.indexOf(value) <= display.indexOf('+')) {
-          return value
-        }
-      })
+    let a = value.filter(x => display.indexOf(x) > display.indexOf(specials[0]))
+
+    let b = value.filter(x => display.indexOf(x) <= display.indexOf(specials[0]))
+
+    //a is numbers to be paranthasized
+
+    // b is everything before and including math signs
 
       if(a.includes('(') || a.includes(')')) {
        return none(b,takeoff(a))
@@ -379,82 +361,19 @@ flip = () => {
           }
         }
 
-  function subtract(x) {
-      let a = display.filter(function(value) {
-      if(display.indexOf(value) > display.indexOf('-')) {
-        return value
-        }
-      })
-      let b = display.filter(function(value) {
-      if(display.indexOf(value) <= display.indexOf('-')) {
-        return value
-          }
-        })
-
-        if(a.includes('(') && a.includes(')')) {
-            return none(b,takeoff(a))
-            } else {return paran(b,combine(a))}
-         }
-
-  function multiply(x) {
-    let a = display.filter(function(value) {
-    if(display.indexOf(value) > display.indexOf('*')) {
-      return signs(value)
-      }
-    })
-    let b = display.filter(function(value) {
-    if(display.indexOf(value) <= display.indexOf('*')) {
-      return value
-        }
-      })
-
-      if(a.includes('(') && a.includes(')')) {
-          return none(b,takeoff(a))
-        } else {
-
-          return paran(b,combine(a))}
-        }
-
-  function divide(x) {
-          let a = display.filter(function(value) {
-          if(display.indexOf(value) > display.indexOf('/')) {
-            return value
-            }
-          })
-          let b = display.filter(function(value) {
-          if(display.indexOf(value) <= display.indexOf('/')) {
-            return value
-              }
-            })
-            if(a.includes('(') && a.includes(')')) {
-                return none(b,takeoff(a))
-                } else {return paran(b,combine(a))}
-             }
-
   let a = add(display)
-  let b = subtract(display)
-  let c = multiply(display)
-  let d = divide(display)
 
-  if(display.includes('+')) {
+   if(specials.length > 0 && specials[0] !== '.' &&
+       !specials.includes('.')) {
+       this.setState({
+         display: a
+       })
+     }
+      else if(specials.length > 0 && specials[0] !== '.' &&
+        specials.includes('.')) {
         this.setState({
           display: a,
           decimal: true
-        })
-      }  else if (display.includes('-')) {
-        this.setState({
-          display: b,
-          decimal:true
-        })
-      } else if (display.includes('*')) {
-        this.setState({
-          display: c,
-          decimal:true
-        })
-      } else if (display.includes('/')) {
-        this.setState({
-          display: d,
-          decimal:true
         })
       }  else if (display) {
         let c = combine(display);
@@ -493,7 +412,7 @@ render() {
 
         <button className = 'Button' value='∆'>+/-</button>
 
-        <button className = 'Button' value='delete' id = 'del'>  </button>
+        <button className = 'Button' value='delete' id = 'del'></button>
         <button className = 'Button' value='-'>-</button>
         <button className = 'Button' value='+'>+</button>
         <button className = 'Button' value='=' size = "2" >=</button>
@@ -505,4 +424,4 @@ render() {
     }
   }
 
-export default App;
+export default Calc;
